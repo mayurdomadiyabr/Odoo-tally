@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Tally Backend Form View -->
+    <record id="view_tally_backend_form" model="ir.ui.view">
+        <field name="name">tally.backend.form</field>
+        <field name="model">tally.backend</field>
+        <field name="arch" type="xml">
+            <form string="TallyPrime Backend">
+                <header>
+                    <button name="test_connection" 
+                            string="Test Connection" 
+                            type="object" 
+                            class="btn-primary"
+                            icon="fa-plug"/>
+                    <button name="sync_all_partners" 
+                            string="Sync All Partners" 
+                            type="object" 
+                            class="btn-secondary"
+                            icon="fa-users"
+                            invisible="state != 'connected'"/>
+                    <button name="sync_all_products" 
+                            string="Sync All Products" 
+                            type="object" 
+                            class="btn-secondary"
+                            icon="fa-cubes"
+                            invisible="state != 'connected'"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,connected"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(tally_connector.action_tally_res_partner)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-users"
+                                invisible="state != 'connected'">
+                            <field name="sync_partners" invisible="1"/>
+                            <span>Partner Bindings</span>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Backend Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Connection Settings">
+                            <field name="tally_host"/>
+                            <field name="tally_port"/>
+                            <field name="company_name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Sync Settings">
+                            <field name="auto_sync"/>
+                            <field name="sync_partners"/>
+                            <field name="sync_products"/>
+                            <field name="sync_invoices"/>
+                            <field name="sync_deletions"/>
+                        </group>
+                    </group>
+                    <group string="Tally Mappings" invisible="state != 'connected'">
+                        <group>
+                            <field name="customer_parent_group"/>
+                            <field name="vendor_parent_group"/>
+                        </group>
+                        <group>
+                            <field name="stock_category"/>
+                            <field name="stock_unit"/>
+                        </group>
+                    </group>
+                    <group string="Status" invisible="state == 'draft'">
+                        <field name="last_sync"/>
+                        <field name="connection_error" invisible="not connection_error"/>
+                    </group>
+                    <field name="active" invisible="1"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tally Backend Tree View -->
+    <record id="view_tally_backend_tree" model="ir.ui.view">
+        <field name="name">tally.backend.tree</field>
+        <field name="model">tally.backend</field>
+        <field name="arch" type="xml">
+            <tree string="TallyPrime Backends" decoration-danger="state == 'error'" decoration-success="state == 'connected'">
+                <field name="name"/>
+                <field name="tally_host"/>
+                <field name="tally_port"/>
+                <field name="company_name"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state == 'connected'"
+                       decoration-warning="state == 'draft'"
+                       decoration-danger="state == 'error'"/>
+                <field name="last_sync"/>
+                <field name="auto_sync"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Tally Backend Action -->
+    <record id="action_tally_backend" model="ir.actions.act_window">
+        <field name="name">TallyPrime Backends</field>
+        <field name="res_model">tally.backend</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure your first TallyPrime connection!
+            </p>
+            <p>
+                Connect Odoo with TallyPrime for real-time bidirectional 
+                synchronization of Partners, Products, and Invoices.
+            </p>
+        </field>
+    </record>
+
+    <!-- Partner Binding Tree View -->
+    <record id="view_tally_res_partner_tree" model="ir.ui.view">
+        <field name="name">tally.res.partner.tree</field>
+        <field name="model">tally.res.partner</field>
+        <field name="arch" type="xml">
+            <tree string="Partner Bindings" 
+                  decoration-danger="sync_state == 'error'" 
+                  decoration-success="sync_state == 'synced'"
+                  decoration-warning="sync_state == 'pending'">
+                <field name="odoo_id"/>
+                <field name="ledger_name"/>
+                <field name="ledger_group"/>
+                <field name="backend_id"/>
+                <field name="sync_state" widget="badge"
+                       decoration-success="sync_state == 'synced'"
+                       decoration-warning="sync_state == 'pending'"
+                       decoration-danger="sync_state == 'error'"/>
+                <field name="sync_date"/>
+                <button name="retry_sync" type="object" string="Retry" 
+                        icon="fa-refresh" invisible="sync_state != 'error'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Partner Binding Form View -->
+    <record id="view_tally_res_partner_form" model="ir.ui.view">
+        <field name="name">tally.res.partner.form</field>
+        <field name="model">tally.res.partner</field>
+        <field name="arch" type="xml">
+            <form string="Partner Tally Binding">
+                <header>
+                    <button name="retry_sync" string="Retry Sync" type="object" 
+                            class="btn-primary" invisible="sync_state == 'synced'"/>
+                    <button name="_export_to_tally" string="Export Now" type="object" 
+                            class="btn-secondary"/>
+                    <field name="sync_state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Odoo Record">
+                            <field name="odoo_id"/>
+                            <field name="backend_id"/>
+                        </group>
+                        <group string="Tally Mapping">
+                            <field name="ledger_name"/>
+                            <field name="ledger_group"/>
+                            <field name="tally_id"/>
+                        </group>
+                    </group>
+                    <group string="Sync Status">
+                        <field name="sync_date"/>
+                        <field name="sync_error" invisible="not sync_error"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Partner Binding Action -->
+    <record id="action_tally_res_partner" model="ir.actions.act_window">
+        <field name="name">Partner Bindings</field>
+        <field name="res_model">tally.res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_pending': 1}</field>
+    </record>
+
+    <!-- Product Binding Tree View -->
+    <record id="view_tally_product_product_tree" model="ir.ui.view">
+        <field name="name">tally.product.product.tree</field>
+        <field name="model">tally.product.product</field>
+        <field name="arch" type="xml">
+            <tree string="Product Bindings"
+                  decoration-danger="sync_state == 'error'"
+                  decoration-success="sync_state == 'synced'"
+                  decoration-warning="sync_state == 'pending'">
+                <field name="odoo_id"/>
+                <field name="stock_item_name"/>
+                <field name="tally_category"/>
+                <field name="tally_unit"/>
+                <field name="backend_id"/>
+                <field name="sync_state" widget="badge"
+                       decoration-success="sync_state == 'synced'"
+                       decoration-warning="sync_state == 'pending'"
+                       decoration-danger="sync_state == 'error'"/>
+                <field name="sync_date"/>
+                <button name="retry_sync" type="object" string="Retry"
+                        icon="fa-refresh" invisible="sync_state != 'error'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Product Binding Action -->
+    <record id="action_tally_product_product" model="ir.actions.act_window">
+        <field name="name">Product Bindings</field>
+        <field name="res_model">tally.product.product</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Invoice Binding Tree View -->
+    <record id="view_tally_account_move_tree" model="ir.ui.view">
+        <field name="name">tally.account.move.tree</field>
+        <field name="model">tally.account.move</field>
+        <field name="arch" type="xml">
+            <tree string="Invoice Bindings"
+                  decoration-danger="sync_state == 'error'"
+                  decoration-success="sync_state == 'synced'"
+                  decoration-warning="sync_state == 'pending'">
+                <field name="odoo_id"/>
+                <field name="voucher_number"/>
+                <field name="voucher_type"/>
+                <field name="backend_id"/>
+                <field name="sync_state" widget="badge"
+                       decoration-success="sync_state == 'synced'"
+                       decoration-warning="sync_state == 'pending'"
+                       decoration-danger="sync_state == 'error'"/>
+                <field name="sync_date"/>
+                <button name="retry_sync" type="object" string="Retry"
+                        icon="fa-refresh" invisible="sync_state != 'error'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Invoice Binding Action -->
+    <record id="action_tally_account_move" model="ir.actions.act_window">
+        <field name="name">Invoice Bindings</field>
+        <field name="res_model">tally.account.move</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Main Menu -->
+    <menuitem id="menu_tally_connector_root"
+              name="TallyPrime"
+              web_icon="tally_connector,static/description/icon.png"
+              groups="tally_connector.group_tally_user"
+              sequence="100"/>
+
+    <!-- Configuration Submenu -->
+    <menuitem id="menu_tally_configuration"
+              name="Configuration"
+              parent="menu_tally_connector_root"
+              groups="tally_connector.group_tally_manager"
+              sequence="100"/>
+
+    <menuitem id="menu_tally_backend"
+              name="Backends"
+              parent="menu_tally_configuration"
+              action="action_tally_backend"
+              sequence="10"/>
+
+    <!-- Sync Status Submenu -->
+    <menuitem id="menu_tally_sync"
+              name="Sync Status"
+              parent="menu_tally_connector_root"
+              sequence="10"/>
+
+    <menuitem id="menu_tally_partner_bindings"
+              name="Partner Bindings"
+              parent="menu_tally_sync"
+              action="action_tally_res_partner"
+              sequence="10"/>
+
+    <menuitem id="menu_tally_product_bindings"
+              name="Product Bindings"
+              parent="menu_tally_sync"
+              action="action_tally_product_product"
+              sequence="20"/>
+
+    <menuitem id="menu_tally_invoice_bindings"
+              name="Invoice Bindings"
+              parent="menu_tally_sync"
+              action="action_tally_account_move"
+              sequence="30"/>
+
+</odoo>

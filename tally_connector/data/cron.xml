@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Cron Job: Sync Pending Records -->
+    <record id="ir_cron_tally_sync_pending" model="ir.cron">
+        <field name="name">TallyPrime: Sync Pending Records</field>
+        <field name="model_id" ref="model_tally_backend"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_sync_pending()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+    </record>
+
+</odoo>

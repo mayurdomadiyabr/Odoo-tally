@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tally_backend_user,tally.backend.user,model_tally_backend,group_tally_user,1,0,0,0
+access_tally_backend_manager,tally.backend.manager,model_tally_backend,group_tally_manager,1,1,1,1
+access_tally_res_partner_user,tally.res.partner.user,model_tally_res_partner,group_tally_user,1,0,0,0
+access_tally_res_partner_manager,tally.res.partner.manager,model_tally_res_partner,group_tally_manager,1,1,1,1
+access_tally_product_product_user,tally.product.product.user,model_tally_product_product,group_tally_user,1,0,0,0
+access_tally_product_product_manager,tally.product.product.manager,model_tally_product_product,group_tally_manager,1,1,1,1
+access_tally_account_move_user,tally.account.move.user,model_tally_account_move,group_tally_user,1,0,0,0
+access_tally_account_move_manager,tally.account.move.manager,model_tally_account_move,group_tally_manager,1,1,1,1

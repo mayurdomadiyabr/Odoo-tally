@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Security Groups -->
+    <record id="module_category_tally_connector" model="ir.module.category">
+        <field name="name">TallyPrime Connector</field>
+        <field name="description">Category for TallyPrime integration</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="group_tally_user" model="res.groups">
+        <field name="name">Tally User</field>
+        <field name="category_id" ref="module_category_tally_connector"/>
+        <field name="comment">Can view Tally sync status and manually trigger syncs</field>
+    </record>
+
+    <record id="group_tally_manager" model="res.groups">
+        <field name="name">Tally Manager</field>
+        <field name="category_id" ref="module_category_tally_connector"/>
+        <field name="implied_ids" eval="[(4, ref('group_tally_user'))]"/>
+        <field name="comment">Can configure Tally backends and manage all sync settings</field>
+    </record>
+
+</odoo>

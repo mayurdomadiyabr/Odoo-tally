@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Extend Partner Form View -->
+    <record id="view_partner_form_tally" model="ir.ui.view">
+        <field name="name">res.partner.form.tally</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="export_to_tally" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-exchange"
+                        groups="tally_connector.group_tally_user">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Sync to Tally</span>
+                    </div>
+                </button>
+            </div>
+            <page name="sales_purchases" position="after">
+                <page string="TallyPrime" name="tally" 
+                      groups="tally_connector.group_tally_user"
+                      invisible="not tally_bind_ids">
+                    <group>
+                        <field name="tally_synced" readonly="1"/>
+                    </group>
+                    <field name="tally_bind_ids" readonly="1">
+                        <tree>
+                            <field name="backend_id"/>
+                            <field name="ledger_name"/>
+                            <field name="sync_state" widget="badge"
+                                   decoration-success="sync_state == 'synced'"
+                                   decoration-warning="sync_state == 'pending'"
+                                   decoration-danger="sync_state == 'error'"/>
+                            <field name="sync_date"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <!-- Extend Partner Tree View -->
+    <record id="view_partner_tree_tally" model="ir.ui.view">
+        <field name="name">res.partner.tree.tally</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <field name="email" position="after">
+                <field name="tally_synced" optional="hide" 
+                       widget="boolean_toggle" readonly="1"
+                       groups="tally_connector.group_tally_user"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

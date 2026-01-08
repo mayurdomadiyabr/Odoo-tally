@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Extend Product Form View -->
+    <record id="view_product_form_tally" model="ir.ui.view">
+        <field name="name">product.product.form.tally</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="export_to_tally" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-exchange"
+                        groups="tally_connector.group_tally_user">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Sync to Tally</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!-- Extend Product Template Form View -->
+    <record id="view_product_template_form_tally" model="ir.ui.view">
+        <field name="name">product.template.form.tally</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="TallyPrime" name="tally_page"
+                      groups="tally_connector.group_tally_user">
+                    <group>
+                        <group string="Tally Sync Status">
+                            <field name="product_variant_ids" invisible="1"/>
+                        </group>
+                    </group>
+                    <p class="text-muted">
+                        To sync this product to TallyPrime, use the "Sync to Tally" 
+                        button on the product variant form.
+                    </p>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <!-- Extend Invoice Form View -->
+    <record id="view_account_move_form_tally" model="ir.ui.view">
+        <field name="name">account.move.form.tally</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="export_to_tally" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-exchange"
+                        invisible="state != 'posted'"
+                        groups="tally_connector.group_tally_user">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Sync to Tally</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>
