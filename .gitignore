@@ -69,3 +69,5 @@ sessions/
 
 # Documentation
 docs/_build/
+odoo18/
+venv/

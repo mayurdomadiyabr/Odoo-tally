@@ -26,7 +26,7 @@
                         <field name="tally_synced" readonly="1"/>
                     </group>
                     <field name="tally_bind_ids" readonly="1">
-                        <tree>
+                        <list>
                             <field name="backend_id"/>
                             <field name="ledger_name"/>
                             <field name="sync_state" widget="badge"
@@ -34,7 +34,7 @@
                                    decoration-warning="sync_state == 'pending'"
                                    decoration-danger="sync_state == 'error'"/>
                             <field name="sync_date"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </page>

@@ -319,7 +319,7 @@ class TallyBackend(models.Model):
             }
 
     @api.model
-    def _cron_sync_pending(self):
+    def cron_sync_pending(self):
         """Cron job to sync any pending records"""
         backends = self.search([
             ('active', '=', True),

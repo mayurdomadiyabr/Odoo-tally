@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     
+    <!-- 
+    ============================================
+    ACTIONS - Define before views that use them
+    ============================================
+    -->
+    
+    <!-- Tally Backend Action -->
+    <record id="action_tally_backend" model="ir.actions.act_window">
+        <field name="name">TallyPrime Backends</field>
+        <field name="res_model">tally.backend</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure your first TallyPrime connection!
+            </p>
+            <p>
+                Connect Odoo with TallyPrime for real-time bidirectional 
+                synchronization of Partners, Products, and Invoices.
+            </p>
+        </field>
+    </record>
+
+    <!-- Partner Binding Action -->
+    <record id="action_tally_res_partner" model="ir.actions.act_window">
+        <field name="name">Partner Bindings</field>
+        <field name="res_model">tally.res.partner</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Product Binding Action -->
+    <record id="action_tally_product_product" model="ir.actions.act_window">
+        <field name="name">Product Bindings</field>
+        <field name="res_model">tally.product.product</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Invoice Binding Action -->
+    <record id="action_tally_account_move" model="ir.actions.act_window">
+        <field name="name">Invoice Bindings</field>
+        <field name="res_model">tally.account.move</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- 
+    ============================================
+    VIEWS - Backend Configuration
+    ============================================
+    -->
+    
     <!-- Tally Backend Form View -->
     <record id="view_tally_backend_form" model="ir.ui.view">
         <field name="name">tally.backend.form</field>
@@ -89,7 +138,7 @@
         <field name="name">tally.backend.tree</field>
         <field name="model">tally.backend</field>
         <field name="arch" type="xml">
-            <tree string="TallyPrime Backends" decoration-danger="state == 'error'" decoration-success="state == 'connected'">
+            <list string="TallyPrime Backends" decoration-danger="state == 'error'" decoration-success="state == 'connected'">
                 <field name="name"/>
                 <field name="tally_host"/>
                 <field name="tally_port"/>
@@ -101,32 +150,22 @@
                 <field name="last_sync"/>
                 <field name="auto_sync"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
-    <!-- Tally Backend Action -->
-    <record id="action_tally_backend" model="ir.actions.act_window">
-        <field name="name">TallyPrime Backends</field>
-        <field name="res_model">tally.backend</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Configure your first TallyPrime connection!
-            </p>
-            <p>
-                Connect Odoo with TallyPrime for real-time bidirectional 
-                synchronization of Partners, Products, and Invoices.
-            </p>
-        </field>
-    </record>
+    <!-- 
+    ============================================
+    VIEWS - Partner Bindings
+    ============================================
+    -->
 
     <!-- Partner Binding Tree View -->
     <record id="view_tally_res_partner_tree" model="ir.ui.view">
         <field name="name">tally.res.partner.tree</field>
         <field name="model">tally.res.partner</field>
         <field name="arch" type="xml">
-            <tree string="Partner Bindings" 
+            <list string="Partner Bindings" 
                   decoration-danger="sync_state == 'error'" 
                   decoration-success="sync_state == 'synced'"
                   decoration-warning="sync_state == 'pending'">
@@ -141,7 +180,7 @@
                 <field name="sync_date"/>
                 <button name="retry_sync" type="object" string="Retry" 
                         icon="fa-refresh" invisible="sync_state != 'error'"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -154,8 +193,6 @@
                 <header>
                     <button name="retry_sync" string="Retry Sync" type="object" 
                             class="btn-primary" invisible="sync_state == 'synced'"/>
-                    <button name="_export_to_tally" string="Export Now" type="object" 
-                            class="btn-secondary"/>
                     <field name="sync_state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -179,20 +216,18 @@
         </field>
     </record>
 
-    <!-- Partner Binding Action -->
-    <record id="action_tally_res_partner" model="ir.actions.act_window">
-        <field name="name">Partner Bindings</field>
-        <field name="res_model">tally.res.partner</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_pending': 1}</field>
-    </record>
+    <!-- 
+    ============================================
+    VIEWS - Product Bindings
+    ============================================
+    -->
 
     <!-- Product Binding Tree View -->
     <record id="view_tally_product_product_tree" model="ir.ui.view">
         <field name="name">tally.product.product.tree</field>
         <field name="model">tally.product.product</field>
         <field name="arch" type="xml">
-            <tree string="Product Bindings"
+            <list string="Product Bindings"
                   decoration-danger="sync_state == 'error'"
                   decoration-success="sync_state == 'synced'"
                   decoration-warning="sync_state == 'pending'">
@@ -208,23 +243,22 @@
                 <field name="sync_date"/>
                 <button name="retry_sync" type="object" string="Retry"
                         icon="fa-refresh" invisible="sync_state != 'error'"/>
-            </tree>
+            </list>
         </field>
     </record>
 
-    <!-- Product Binding Action -->
-    <record id="action_tally_product_product" model="ir.actions.act_window">
-        <field name="name">Product Bindings</field>
-        <field name="res_model">tally.product.product</field>
-        <field name="view_mode">tree,form</field>
-    </record>
+    <!-- 
+    ============================================
+    VIEWS - Invoice Bindings
+    ============================================
+    -->
 
     <!-- Invoice Binding Tree View -->
     <record id="view_tally_account_move_tree" model="ir.ui.view">
         <field name="name">tally.account.move.tree</field>
         <field name="model">tally.account.move</field>
         <field name="arch" type="xml">
-            <tree string="Invoice Bindings"
+            <list string="Invoice Bindings"
                   decoration-danger="sync_state == 'error'"
                   decoration-success="sync_state == 'synced'"
                   decoration-warning="sync_state == 'pending'">
@@ -239,15 +273,8 @@
                 <field name="sync_date"/>
                 <button name="retry_sync" type="object" string="Retry"
                         icon="fa-refresh" invisible="sync_state != 'error'"/>
-            </tree>
+            </list>
         </field>
-    </record>
-
-    <!-- Invoice Binding Action -->
-    <record id="action_tally_account_move" model="ir.actions.act_window">
-        <field name="name">Invoice Bindings</field>
-        <field name="res_model">tally.account.move</field>
-        <field name="view_mode">tree,form</field>
     </record>
 
 </odoo>
